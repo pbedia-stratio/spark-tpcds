@@ -47,18 +47,17 @@ object PerfMain{
       "web_site",
       "store_sales")
 
-    tables.foreach(table => spark.read.parquet( hdfsUrl + s"/$table").createOrReplaceTempView(table))
+    tables.foreach(table => spark.read.parquet(hdfsUrl + s"/$table/*").createOrReplaceTempView(table))
 
     json
       .queries
-        .filter(query => {
-          queriesToExecute.contains(query.name)
-        }).foreach( query => {
-        LaunchPad.executeQuery(query.name, query.sql).foreach(
-          println)
-      }
-
-      )
+      .filter(query => {
+        queriesToExecute.contains(query.name)
+      }).foreach( query => {
+      LaunchPad.executeQuery(query.name, query.sql).foreach(
+        println)
+    }
+    )
 
   }
 
